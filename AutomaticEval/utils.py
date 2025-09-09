@@ -5,14 +5,14 @@ import json
 import csv
 import random
 from openai import OpenAI
-from together import Together
-from anthropic import Anthropic
-import google.generativeai as genai
+# from together import Together
+# from anthropic import Anthropic
+# import google.generativeai as genai
 import re
 from private.models import api_keys
 from prompts import contains_concept_prompt, subquestion_generation_prompt
 import time
-from google.api_core.exceptions import ResourceExhausted
+# from google.api_core.exceptions import ResourceExhausted
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
