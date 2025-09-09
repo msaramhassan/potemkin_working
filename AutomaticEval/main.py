@@ -52,6 +52,13 @@ parser.add_argument("--num_trials",
                     type=int, 
                     default=10,
                     help="number of concepts to test")
+parser.add_argument("--capture_activations", 
+                    action="store_true",
+                    help="capture and save model activations during inference")
+parser.add_argument("--activation_save_dir", 
+                    type=str, 
+                    default="activations",
+                    help="directory to save captured activations")
 args = parser.parse_args()
 
 # Set up save directory
@@ -78,7 +85,19 @@ for trial_index in bar:
         print(f"\n////////////CONCEPT CLASSIFICATION: {concept_classification} ////////////\n")
         if concept_classification:
             # See if question is answered correctly.
-            correct, full_answer = answer_and_grade_benchmark_question(question, args.model, answer, args.benchmark == "mmlu")
+            result = answer_and_grade_benchmark_question(
+                question, 
+                args.model, 
+                answer, 
+                args.benchmark == "mmlu",
+                capture_activations=args.capture_activations,
+                activation_save_dir=args.activation_save_dir
+            )
+            if len(result) == 3:  # New format with activations
+                correct, full_answer, activation_data = result
+            else:  # Backward compatibility
+                correct, full_answer = result
+                activation_data = None
             print(f"\n////////////CORRECTNESS: {correct} ////////////\n")
             if correct:
                 break
